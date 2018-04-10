@@ -36,8 +36,14 @@ class IndexController extends Controller {
         //E方法，抛出异常
 //        E("这是异常信息!");
 
-
-
+        //session的用法
+        //1.访问：http://localhost/thinkphp32/index.php?c=Index&a=test
+        //2.访问：http://localhost/thinkphp32/index.php/Home/Index/test
+        $arr = array("name"=>"yaoMing");
+        session("name",$arr);
+        echo "<pre>";
+        print_r($_SESSION['name']);
+        echo "</pre>";
     }
 
 
