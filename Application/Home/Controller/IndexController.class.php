@@ -16,7 +16,7 @@ class IndexController extends Controller {
             $data['nba_team'] = $_REQUEST['nba_team'];
             $data['idiom']    = $_REQUEST['idiom'];
             $data['wish']     = $_REQUEST['wish'];
-            $data['add_time'] = time();
+//            $data['add_time'] = time();
 //            echo "<pre>";
 //            print_r($data);
 //            echo "</pre>";
