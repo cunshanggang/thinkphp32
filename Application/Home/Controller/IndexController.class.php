@@ -2,6 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 class IndexController extends Controller {
+    protected $nba_playoff = array("rockets"=>"火箭","wolves"=>"狼","thunder"=>"雷霆","jazz"=>"爵士","trailblazers"=>"开拓者","pelicans"=>"鹈鹕","warriors"=>"勇士","spurs"=>"马刺","raptors"=>"猛龙","wizards"=>"奇才","cavaliers"=>"骑士","pacers"=>"步行者","76ers"=>"76人","heat"=>"热火","celtics"=>"凯尔特人","bucks"=>"雄鹿");
     public function index(){
 //        $this->show('<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: "微软雅黑"; color: #333;font-size:24px} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.8em; font-size: 36px } a,a:hover{color:blue;}</style><div style="padding: 24px 48px;"> <h1>:)</h1><p>欢迎使用 <b>ThinkPHP</b>！</p><br/>版本 V{$Think.version}</div><script type="text/javascript" src="http://ad.topthink.com/Public/static/client.js"></script><thinkad id="ad_55e75dfae343f5a1"></thinkad><script type="text/javascript" src="http://tajs.qq.com/stats?sId=9347272" charset="UTF-8"></script>','utf-8');
 
@@ -10,7 +11,7 @@ class IndexController extends Controller {
     }
 
     //获取提交数据
-    public function postData() {
+    public function poster() {
         if(IS_POST) {
             $data['nickname'] = $_REQUEST['nickname'];
             $data['nba_team'] = $_REQUEST['nba_team'];
@@ -24,29 +25,57 @@ class IndexController extends Controller {
 //            echo "<pre>";
 //            print_r($nba_fans->create($data));
 //            echo "</pre>";
-            if(!$nba_fans->create($data)) {
+            if(!$nba_fans->create()) {
 //                exit($nba_fans->getError());
                 $this->error($nba_fans->getError());
             }else{
-                $nba_fans->add($data);
+                $nba_fans->add();
+                $data['nba_team'] = $this->team($data['nba_team']);
+//                echo "<pre>";
+//                print_r($data);
+//                echo "</pre>";exti;
+                $this->assign('result',$data);
+                $this->display();
             }
         }
     }
 
     //海报展示
-    public function poster(){
-        $nba_playoff = array();
+    public function poster1(){
         $str = "休斯顿火箭队";
-        $r = strstr($str,"勇士");
 //        echo "<pre>";
 //        print_r(strstr($str,"勇士"));
 //        echo "</pre>";
-        if(!empty($r)) {
+        foreach ($this->nba_playoff as $k=>$v) {
+            $reg = '/('.$v.')/';
+            preg_match($reg,$str,$mat);
 
 
         }
 
+
         $this->display();
+    }
+
+    //获取NBA球队的英文名称用来变换与之对应的背景图片
+    public function team($nba_team) {
+        foreach ($this->nba_playoff as $k=>$v) {
+            $reg = '/('.$v.')/';
+            preg_match($reg,$nba_team,$mat);
+            //若无法匹配用户输入的球队，默认为：火箭队
+            if(!empty($mat[1])) {
+                if($mat[1] == $v) {
+                    $team[$k] = $v;
+                }
+            }
+        }
+        //若没有匹配的球队，默认是火箭队
+        if(empty($team)) {
+            $team['rockets'] = "火箭";
+        }
+        //返回的是索引值，如：rockets=>火箭,返回：0=>rockets
+        $result = array_keys($team);
+        return $result[0];
     }
 
     public function test() {

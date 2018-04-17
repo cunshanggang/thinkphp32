@@ -7,8 +7,8 @@
     <script type="text/javascript" src="__PUBLIC__/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/bootstrap.min.js"></script>
     <style type="text/css">
-        #poster{height:670px;background:url("__PUBLIC__/img/rockets.jpg") no-repeat;}
-        .mg200{margin-top:300px;}
+        #poster{height:670px;background:url("__PUBLIC__/img/{$result['nba_team']}.jpg") no-repeat;}
+        .mg200{margin-top:300px;color:#fff;}
     </style>
 </head>
 <body>
@@ -16,9 +16,9 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-2">
             <div class="jumbotron" id="poster">
-                <h3>总冠军,<u>箭在弦上</u></h3>
-                <p class="mg200">02年开始看火箭，终于可以大声喊出来，火箭总冠军!</p>
-                <p class="text-right"><button class="btn btn-primary btn-lg" role="button">登哥</button></p>
+                <h3>总冠军,<u>{$result['idiom']}</u></h3>
+                <p class="mg200">{$result['wish']}</p>
+                <p class="text-center">{$result['nickname']}</p>
             </div>
         </div>
 
