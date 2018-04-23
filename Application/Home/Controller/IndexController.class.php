@@ -114,6 +114,85 @@ class IndexController extends Controller {
 //        echo "<pre>";
 //        print_r($_SESSION['name']);
 //        echo "</pre>";
+        $m = "欢迎您关注唯有读书，1000谷粒已经到账，可以点击<a href='http://book.3g.cn/wys/index.php?m=Home&c=Index&a=index&jump=1'>这里</a>或下方菜单栏任性看书了！\r\n推荐阅读一下书本:\r\n天后养成：征服凶猛BOSS<a href='http://book.3g.cn/wys/index.php?m=Home&c=Book&a=content&bookid=464440&chapterid=43&wysjump=1'>【点击阅读】</a>\r\n宠妻入骨：冷酷总裁约不约<a href='http://book.3g.cn/wys/index.php?m=Home&c=Book&a=content&bookid=477922&chapterid=28&wysjump=1'>【点击阅读】</a>\r\n无限婚契，枕上总裁欢乐多<a href='http://book.3g.cn/wys/index.php?m=Home&c=Book&a=content&bookid=481094&chapterid=47&wysjump=1'>【点击阅读】</a>";
+        echo $m;
+    }
+
+    public function search() {
+
+        $this->display();
+    }
+
+    public function searchData() {
+        echo "<pre>";
+        print_r($_POST);
+        echo "</pre>";
+//        exit($_POST['username']);
+//        exit;
+//        return $_REQUEST['username'];
+    }
+
+    public function getData() {
+        $arr = array(
+            '0'=>array('小明',"2018-03-26 上午 06:43:07"),
+            '1'=>array('小明',"2018-03-26 下午 07:43:07"),
+            '2'=>array('小明',"2018-03-26 上午 08:43:07"),
+            '3'=>array('小明',"2018--0326 下午 06:43:07"),
+        );
+
+        $data = array();
+        foreach ($arr as $k1=>$v1) {
+            $d = array();
+            //将同一天的打包到同一个数组
+            $name = $v1[0];
+            $time = mb_substr($v1[1],0,13);
+            $strTime = strtotime(mb_substr($v1[1],13,9));
+            foreach($arr as $k2=>$v2) {
+                $name1 = $v2[0];
+                $time1 = mb_substr($v2[1],0,13);
+                $strTime1 = strtotime(mb_substr($v1[1],13,9));
+                if(($name == $name1) && ($time == $time1) && strstr($v2[1],"上午") && ($strTime1>$strTime)) {
+                    $d['morning'] = $v2[1];
+                }
+                if(($name == $name1) && ($time == $time1) && strstr($v2[1],"下午") && ($strTime1>$strTime)) {
+                    $d['afternoon'] = $v2[1];
+                }
+                $d['name'] = $v2[0];
+            }
+            array_push($data,$d);
+        }
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
+//        echo "<pre>";
+//        print_r($arr);
+//        echo "</pre>";
+        foreach($arr as $k=>$v) {
+            if(strstr($v['1'],'上午')) {
+                $arr[$k]['1'] = strtotime(str_replace(" 上午 "," ",$v['1']));//上午的时间
+            }
+
+            if(strstr($v['1'],'下午')) {
+                $arr[$k]['1'] = strtotime(str_replace(" 下午 "," ",$v['1']))+12*60*60;//下午的时间要添加多12个小时
+            }
+        }
+
+//        echo "<pre>";
+//        print_r($arr);
+//        echo "</pre>";
+
+//        echo strtotime("06:43:07");
+//        echo "<hr>";
+//        echo strtotime("07:43:07");
+    }
+
+    public function strTime() {
+        $v = "2018-03-26 下午 06:43:07";
+        $length =  mb_substr($v,0,13);
+//        echo strlen($length);
+        $strTime = mb_substr($v,13,9);
+        echo $strTime;
+
     }
 
 
