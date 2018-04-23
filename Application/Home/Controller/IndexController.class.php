@@ -136,8 +136,8 @@ class IndexController extends Controller {
         $arr = array(
             '0'=>array('小明',"2018-03-26 上午 06:43:07"),
             '1'=>array('小明',"2018-03-26 下午 07:43:07"),
-            '2'=>array('小明',"2018-03-26 上午 08:43:07"),
-            '3'=>array('小明',"2018--0326 下午 06:43:07"),
+            '2'=>array('小明',"2018-03-27 上午 08:43:07"),
+            '3'=>array('小明',"2018-03-27 下午 06:43:07")
         );
 
         $data = array();
@@ -145,24 +145,45 @@ class IndexController extends Controller {
             $d = array();
             //将同一天的打包到同一个数组
             $name = $v1[0];
-            $time = mb_substr($v1[1],0,13);
-            $strTime = strtotime(mb_substr($v1[1],13,9));
+//            echo $name;echo "<hr>";
+            $time = mb_substr($v1[1],0,10);
+//            echo $time;
+//            echo "<hr>";
+            $strTime = strtotime(mb_substr($v1[1],17,9));
+//            echo $strTime;
             foreach($arr as $k2=>$v2) {
                 $name1 = $v2[0];
-                $time1 = mb_substr($v2[1],0,13);
-                $strTime1 = strtotime(mb_substr($v1[1],13,9));
+//                echo $name1;
+//                echo "<hr>";
+                $time1 = mb_substr($v2[1],0,10);
+//                echo "<hr>";
+//                echo $time1;
+                $strTime1 = strtotime(mb_substr($v2[1],17,9));
+//                echo "<hr>";
+//                echo $strTime1;
                 if(($name == $name1) && ($time == $time1) && strstr($v2[1],"上午") && ($strTime1>$strTime)) {
-                    $d['morning'] = $v2[1];
+                    $d['morning'] = strtotime(str_replace(" 上午 "," ",$v2[1]));
+                    $d['name'] = $v2[0];
+                }else{
+                    $d['morning'] = strtotime(str_replace(" 上午 "," ",$v1[1]));
+                    $d['name'] = $v1[0];
                 }
                 if(($name == $name1) && ($time == $time1) && strstr($v2[1],"下午") && ($strTime1>$strTime)) {
-                    $d['afternoon'] = $v2[1];
+                    $d['afternoon'] = strtotime(str_replace(" 下午 "," ",$v2[1]))+12*60*60;
+                    $d['name'] = $v2[0];
+                }else{
+                    $d['afternoon'] = strtotime(str_replace(" 下午 "," ",$v1[1]))+12*60*60;
+                    $d['name'] = $v1[0];
                 }
-                $d['name'] = $v2[0];
+
             }
-            array_push($data,$d);
+            if(!empty($d['morning']) && !empty($d['afternoon']) && !empty($d['name'])) {
+                array_push($data,$d);
+            }
+
         }
         echo "<pre>";
-        print_r($data);
+        print_r(array_unique($data));
         echo "</pre>";
 //        echo "<pre>";
 //        print_r($arr);
@@ -190,8 +211,46 @@ class IndexController extends Controller {
         $v = "2018-03-26 下午 06:43:07";
         $length =  mb_substr($v,0,13);
 //        echo strlen($length);
-        $strTime = mb_substr($v,13,9);
-        echo $strTime;
+//        $strTime = mb_substr($v,13,9);
+//        echo $strTime;
+        $arr = array(
+            '0'=>array('小明',"2018-03-26 上午 06:43:07"),
+            '1'=>array('小明',"2018-03-26 下午 07:43:07"),
+            '2'=>array('小明',"2018-03-26 上午 08:43:07"),
+            '3'=>array('小明',"2018-03-26 下午 06:43:07"),
+        );
+
+        $data = array();
+
+            $d = array();
+            //将同一天的打包到同一个数组
+            $name = $arr[0][0];
+//            echo $name;
+            $time = mb_substr($arr[0][1],0,10);
+//        echo $time;echo "<hr>";
+//        echo mb_substr($arr[0][1],17,9);
+            $strTime = strtotime(mb_substr($arr[0][1],17,9));
+//        echo $strTime;
+                $name1 = $arr[1][0];
+//            echo $name1;
+                $time1 = mb_substr($arr[1][1],0,10);
+//        echo $time1;
+                $strTime1 = strtotime(mb_substr($arr[1][1],17,9));
+//        echo $strTime1;
+                if(($name == $name1) && ($time == $time1) && strstr($arr[1][1],"上午") && ($strTime1>$strTime)) {
+                    $d['morning'] = $arr[1][1];
+                }
+                if(($name == $name1) && ($time == $time1) && strstr($arr[1][1],"下午") && ($strTime1>$strTime)) {
+                    $d['afternoon'] = strtotime(str_replace(" 下午 "," ",$arr[1][1]))+12*60*60;
+                }
+                $d['name'] =$arr[1][0];
+
+            array_push($data,$d);
+
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
+
 
     }
 
