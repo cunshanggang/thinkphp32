@@ -135,8 +135,8 @@ class IndexController extends Controller {
     public function getData() {
         $arr = array(
             '0'=>array('小明',"2018-03-26 上午 06:43:07"),
-            '1'=>array('小明',"2018-03-26 下午 07:43:07"),
-            '2'=>array('小明',"2018-03-27 上午 08:43:07"),
+            '1'=>array('小明',"2018-03-26 上午 07:43:07"),
+            '2'=>array('小明',"2018-03-27 下午 08:43:07"),
             '3'=>array('小明',"2018-03-27 下午 06:43:07")
         );
 
@@ -149,8 +149,11 @@ class IndexController extends Controller {
             $time = mb_substr($v1[1],0,10);
 //            echo $time;
 //            echo "<hr>";
-            $strTime = strtotime(mb_substr($v1[1],17,9));
+            $strTime = strtotime(mb_substr($v1[1],14,9));
+//            echo mb_substr($v1[1],14,9);
+//            echo "<hr>";
 //            echo $strTime;
+
             foreach($arr as $k2=>$v2) {
                 $name1 = $v2[0];
 //                echo $name1;
@@ -158,23 +161,39 @@ class IndexController extends Controller {
                 $time1 = mb_substr($v2[1],0,10);
 //                echo "<hr>";
 //                echo $time1;
-                $strTime1 = strtotime(mb_substr($v2[1],17,9));
+                $strTime1 = strtotime(mb_substr($v2[1],14,9));
 //                echo "<hr>";
 //                echo $strTime1;
-                if(($name == $name1) && ($time == $time1) && strstr($v2[1],"上午") && ($strTime1>$strTime)) {
-                    $d['morning'] = strtotime(str_replace(" 上午 "," ",$v2[1]));
-                    $d['name'] = $v2[0];
+//                echo "<hr>";
+//                echo "<hr>";
+                if(($name == $name1) && ($time == $time1) && ($strTime1>$strTime)) {
+                    if(strstr($v2[1],"上午")) {
+                        $d['morning'] = strtotime(str_replace(" 上午 "," ",$v2[1]));
+                        $d['name'] = $v2[0];
+                    }
+
+                    if(strstr($v2[1],"下午")) {
+                        $d['afternoon'] = strtotime(str_replace(" 下午 "," ",$v2[1]))+12*60*60;
+//                        echo $d['afternoon'];
+//                        echo "<hr>";
+                        $d['name'] = $v2[0];
+                    }
+
                 }else{
+                    $d['name'] = $name;
                     $d['morning'] = strtotime(str_replace(" 上午 "," ",$v1[1]));
-                    $d['name'] = $v1[0];
-                }
-                if(($name == $name1) && ($time == $time1) && strstr($v2[1],"下午") && ($strTime1>$strTime)) {
-                    $d['afternoon'] = strtotime(str_replace(" 下午 "," ",$v2[1]))+12*60*60;
-                    $d['name'] = $v2[0];
-                }else{
+//                    echo strtotime(str_replace(" 下午 "," ",$v1[1]));
+//                    echo "<hr>";
                     $d['afternoon'] = strtotime(str_replace(" 下午 "," ",$v1[1]))+12*60*60;
-                    $d['name'] = $v1[0];
-                }
+//                    echo "<hr>";
+//                    echo $d['afternoon'];
+                 }
+
+//                if(($name == $name1) && ($time == $time1) && strstr($v2[1],"下午") && ($strTime1>$strTime)) {
+//                    $d['afternoon'] = strtotime(str_replace(" 下午 "," ",$v2[1]))+12*60*60;
+//                    $d['name'] = $v2[0];
+//                }
+
 
             }
             if(!empty($d['morning']) && !empty($d['afternoon']) && !empty($d['name'])) {
@@ -183,7 +202,8 @@ class IndexController extends Controller {
 
         }
         echo "<pre>";
-        print_r(array_unique($data));
+//        print_r(array_unique($data));
+        print_r($data);
         echo "</pre>";
 //        echo "<pre>";
 //        print_r($arr);
@@ -215,8 +235,8 @@ class IndexController extends Controller {
 //        echo $strTime;
         $arr = array(
             '0'=>array('小明',"2018-03-26 上午 06:43:07"),
-            '1'=>array('小明',"2018-03-26 下午 07:43:07"),
-            '2'=>array('小明',"2018-03-26 上午 08:43:07"),
+            '1'=>array('小明',"2018-03-26 上午 08:43:07"),
+            '2'=>array('小明',"2018-03-26 下午 07:43:07"),
             '3'=>array('小明',"2018-03-26 下午 06:43:07"),
         );
 
@@ -225,20 +245,25 @@ class IndexController extends Controller {
             $d = array();
             //将同一天的打包到同一个数组
             $name = $arr[0][0];
-//            echo $name;
+//            echo $name;echo "<hr>";
             $time = mb_substr($arr[0][1],0,10);
 //        echo $time;echo "<hr>";
-//        echo mb_substr($arr[0][1],17,9);
-            $strTime = strtotime(mb_substr($arr[0][1],17,9));
-//        echo $strTime;
+//        echo mb_substr($arr[0][1],14,9);
+            $strTime = strtotime(mb_substr($arr[0][1],14,9));
+//        echo $strTime;echo "<hr>";
                 $name1 = $arr[1][0];
 //            echo $name1;
                 $time1 = mb_substr($arr[1][1],0,10);
 //        echo $time1;
-                $strTime1 = strtotime(mb_substr($arr[1][1],17,9));
-//        echo $strTime1;
+                $strTime1 = strtotime(mb_substr($arr[1][1],14,9));
+//        echo $strTime1;echo "<hr>";
+//        print_r($strTime1>$strTime);
+        echo "<pre>";
+//        echo $arr[1][1];
+//        print_r(strstr($arr[1][1],"上午"));
+//        echo "</pre>";
                 if(($name == $name1) && ($time == $time1) && strstr($arr[1][1],"上午") && ($strTime1>$strTime)) {
-                    $d['morning'] = $arr[1][1];
+                    $d['morning'] = strtotime(str_replace(" 上午 "," ",$arr[1][1]));
                 }
                 if(($name == $name1) && ($time == $time1) && strstr($arr[1][1],"下午") && ($strTime1>$strTime)) {
                     $d['afternoon'] = strtotime(str_replace(" 下午 "," ",$arr[1][1]))+12*60*60;
