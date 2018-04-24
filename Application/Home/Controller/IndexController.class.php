@@ -279,5 +279,54 @@ class IndexController extends Controller {
 
     }
 
+    public function assembleData() {
+        $arr = array(
+            '0'=>array('小明',"2018-03-26 上午 06:43:07"),
+            '1'=>array('小明',"2018-03-26 上午 08:43:07"),
+            '2'=>array('小明',"2018-03-26 下午 07:43:07"),
+            '3'=>array('小明',"2018-03-26 下午 06:43:07")
+        );
+
+        //将后面的时间转换为时间戳
+        foreach ($arr as $k=>$v) {
+            if(strstr($v[1],"上午")) {
+                $arr[$k][1] = strtotime(str_replace(" 上午 "," ",$v[1]));
+                //区分上午,0:表示上午
+                $arr[$k][2] = 0;
+            }
+            if(strstr($v[1],"下午")) {
+                $arr[$k][1] = strtotime(str_replace(" 下午 "," ",$v[1]))+60*60*12;
+                //区分下午,1:表示下午
+                $arr[$k][2] = 1;
+            }
+        }
+
+        echo "<pre>";
+        print_r($arr);
+        echo "</pre>";
+        $morning = array();//早上的时间
+        $afternoon = array();
+        foreach($arr as $k1=>$v1) {
+            if($v1[2] == 0) {
+                $morning[$k1][0] = $v1[0];
+                $morning[$k1][1] = $v1[1];
+                $morning[$k1][2] = $v1[2];
+            }else{
+                $afternoon[$k1][0] = $v1[0];
+                $afternoon[$k1][1] = $v1[1];
+                $afternoon[$k1][2] = $v1[2];
+            }
+        }
+
+        echo "<pre>";
+        print_r(array_values($morning));
+        echo "<hr>";
+        print_r(array_values($afternoon));
+        echo "</pre>";
+
+
+
+    }
+
 
 }
