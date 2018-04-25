@@ -258,7 +258,7 @@ class IndexController extends Controller {
                 $strTime1 = strtotime(mb_substr($arr[1][1],14,9));
 //        echo $strTime1;echo "<hr>";
 //        print_r($strTime1>$strTime);
-        echo "<pre>";
+//        echo "<pre>";
 //        echo $arr[1][1];
 //        print_r(strstr($arr[1][1],"上午"));
 //        echo "</pre>";
@@ -275,6 +275,7 @@ class IndexController extends Controller {
         echo "<pre>";
         print_r($data);
         echo "</pre>";
+
 
 
     }
@@ -317,13 +318,30 @@ class IndexController extends Controller {
                 $afternoon[$k1][2] = $v1[2];
             }
         }
+        //将索引重置
+        array_values($morning);
+        array_values($afternoon);
+//        echo "<pre>";
+//        print_r(array_values($morning));
+//        echo "<hr>";
+//        print_r(array_values($afternoon));
+//        echo "</pre>";
+        //查找是否有重复的
+        foreach($morning as $k2=>$v2) {
+            $name = $v2[0];
+            $time = $v2[1];
+            foreach($morning as $k3=>$v3) {
+                $name1 = $v3[0];
+                $time1 = $v3[1];
+                if(($name==$name1) && ($time1>$time)) {
+                    unset($morning[$k3]);
+                }
+            }
+        }
 
         echo "<pre>";
-        print_r(array_values($morning));
-        echo "<hr>";
-        print_r(array_values($afternoon));
+        print_r($morning);
         echo "</pre>";
-
 
 
     }
