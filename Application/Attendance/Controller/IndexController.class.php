@@ -9,6 +9,7 @@ class IndexController extends Controller {
     }
 
     public function test() {
+        $data=array();
         if(!empty($_FILES)) {
             $upload = new Upload();
 //            $upload->maxSize = 3145728 ;//设置附件上传大小
@@ -37,7 +38,6 @@ class IndexController extends Controller {
                     $currentSheet = $PHPExcel->getSheet(0);                      // 获取表中的第一个工作表，如果要获取第二个，把0改为1，依次类推
                     $allColumn = $currentSheet->getHighestColumn();              // 获取总列数
                     $allRow = $currentSheet->getHighestRow();                    // 获取总行数
-                    $data=array();
                     for($j=1;$j<=$allRow;$j++){
                         //从A列读取数据
                         for($k='A';$k<=$allColumn;$k++){
@@ -47,10 +47,111 @@ class IndexController extends Controller {
                     }
                 }
             }
-            echo "<pre>";
-            print_r($data);
-            echo "</pre>";
-
         }
+        //去掉标题并重置索引
+         array_shift($data);
+//            echo "<pre>";
+//            print_r($data);
+//            echo "</pre>";
+        $r = $this->assembleData($data);
+        echo "<pre>";
+        print_r($r);
+        echo "</pre>";
+    }
+
+    public function search() {
+
+        $this->display();
+    }
+
+    public function searchData() {
+        echo "<pre>";
+        print_r($_POST);
+        echo "</pre>";
+//        exit($_POST['username']);
+//        exit;
+//        return $_REQUEST['username'];
+    }
+
+    public function assembleData($arr) {
+//        $arr = array(
+//            '0'=>array('小明',"2018-03-26 上午 06:43:07"),
+//            '1'=>array('小明',"2018-03-26 上午 08:43:07"),
+//            '2'=>array('小明',"2018-03-26 下午 06:43:07"),
+//            '3'=>array('小明',"2018-03-26 下午 07:43:07")
+//        );
+
+        //将后面的时间转换为时间戳
+        foreach ($arr as $k=>$v) {
+            if(strstr($v[1],"上午")) {
+                $arr[$k][1] = strtotime(str_replace(" 上午 "," ",$v[1]));
+                //区分上午,0:表示上午
+                $arr[$k][2] = 0;
+            }
+            if(strstr($v[1],"下午")) {
+                $arr[$k][1] = strtotime(str_replace(" 下午 "," ",$v[1]))+60*60*12;
+                //区分下午,1:表示下午
+                $arr[$k][2] = 1;
+            }
+        }
+
+//        echo "<pre>";
+//        print_r($arr);
+//        echo "</pre>";
+        $morning = array();//早上的时间
+        $afternoon = array();
+        foreach($arr as $k1=>$v1) {
+            if($v1[2] == 0) {
+                $morning[$k1][0] = $v1[0];
+                $morning[$k1][1] = $v1[1];
+                $morning[$k1][2] = $v1[2];
+            }else{
+                $afternoon[$k1][0] = $v1[0];
+                $afternoon[$k1][1] = $v1[1];
+                $afternoon[$k1][2] = $v1[2];
+            }
+        }
+        //将索引重置
+        $morning = array_values($morning);
+        $afternoon = array_values($afternoon);
+//        echo "<pre>";
+//        print_r(array_values($morning));
+//        echo "<hr>";
+//        print_r(array_values($afternoon));
+//        echo "</pre>";
+        //查找是否有重复的
+        foreach($morning as $k2=>$v2) {
+            $name = $v2[0];
+            $time = $v2[1];
+            foreach($morning as $k3=>$v3) {
+                $name1 = $v3[0];
+                $time1 = $v3[1];
+                if(($name==$name1) && ($time1>$time)) {
+                    unset($morning[$k3]);
+                }
+            }
+        }
+//        echo "<pre>";
+//        print_r($morning);
+//        echo "</pre>";
+//        echo "<hr>";
+        foreach($afternoon as $k4=>$v4) {
+            $name2 = $v4[0];
+            $time2 = $v4[1];
+            foreach($afternoon as $k5=>$v5) {
+                $name3 = $v5[0];
+                $time3 = $v5[1];
+                if(($name2==$name3) && ($time3>$time2)) {
+                    unset($afternoon[$k4]);
+                }
+            }
+        }
+//        echo "<pre>";
+//        print_r($afternoon);
+//        echo "</pre>";
+        $result['morning']   = $morning;
+        $result['afternoon'] = $afternoon;
+
+        return $result;
     }
 }
