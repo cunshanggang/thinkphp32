@@ -54,8 +54,12 @@ class IndexController extends Controller {
 //            print_r($data);
 //            echo "</pre>";
         $r = $this->assembleData($data);
+        $m = array_values($r['morning']);
+        $a = array_values($r['afternoon']);
         echo "<pre>";
-        print_r($r);
+        print_r($m);
+        echo "<hr>";
+        print_r($a);
         echo "</pre>";
     }
 
@@ -123,10 +127,12 @@ class IndexController extends Controller {
         foreach($morning as $k2=>$v2) {
             $name = $v2[0];
             $time = $v2[1];
+            $date = date("Ymd",$v2[1]);
             foreach($morning as $k3=>$v3) {
                 $name1 = $v3[0];
                 $time1 = $v3[1];
-                if(($name==$name1) && ($time1>$time)) {
+                $date1 = date("Ymd",$v3[1]);
+                if(($name==$name1) && ($time1>$time) && ($date==$date1)) {
                     unset($morning[$k3]);
                 }
             }
@@ -138,10 +144,12 @@ class IndexController extends Controller {
         foreach($afternoon as $k4=>$v4) {
             $name2 = $v4[0];
             $time2 = $v4[1];
+            $date2 = date("Ymd",$v4[1]);
             foreach($afternoon as $k5=>$v5) {
                 $name3 = $v5[0];
                 $time3 = $v5[1];
-                if(($name2==$name3) && ($time3>$time2)) {
+                $date3 = date("Ymd",$v5[1]);
+                if(($name2==$name3) && ($time3>$time2) && ($date2==$date3)) {
                     unset($afternoon[$k4]);
                 }
             }
