@@ -115,4 +115,18 @@ class IndexController extends Controller {
 //        print_r($_SESSION['name']);
 //        echo "</pre>";
     }
+
+    public function batchInserts() {
+        $m = M('student',"",'mysql://root:@localhost/tp32#utf8');
+        $data[0] = array('name'=>'林一鸣','gender'=>'','age'=>24,'class'=>'1201','major'=>'计算机科学与技术');
+        $data[1] = array('name'=>'林书桓','gender'=>'','age'=>23,'class'=>'1202','major'=>'计算机科学与技术');
+        $data[2] = array('name'=>'','gender'=>'','age'=>'','class'=>'','major'=>'');
+//        echo "<pre>";
+//        print_r($data);
+//        echo "</pre>";exit;
+        $r = $m->addAll($data);
+        echo "<pre>";
+        print_r($r);
+        echo "</pre>";
+    }
 }
