@@ -129,4 +129,94 @@ class IndexController extends Controller {
         print_r($r);
         echo "</pre>";
     }
+
+    public function bdbook() {
+        $m = M('bdbook',"",'mysql://root:@localhost/tp32#utf8');
+//        echo "<pre>";
+//        print_r($m);
+        $r = $m->select();
+//        $r1 = $m->getLastSql();
+//        echo $r1;
+//        echo "<pre>";
+//        print_r($r);
+//        echo "</pre>";
+
+//        $word = "下一站天后";
+//        $url = "http://www.baidu.com/s?wd=".$word;
+//        // 构造包头，模拟浏览器请求
+//        $header = array (
+//            "Host:www.baidu.com",
+//            "Content-Type:application/x-www-form-urlencoded",//post请求
+//            "Connection: keep-alive",
+//            'Referer:http://www.baidu.com',
+//            'User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; BIDUBrowser 2.6)'
+//        );
+//        $ch = curl_init ();
+//        curl_setopt ( $ch, CURLOPT_URL, $url );
+//        curl_setopt ( $ch, CURLOPT_HTTPHEADER, $header );
+//        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+//        $content = curl_exec ( $ch );
+//        if ($content == FALSE) {
+//            echo "error:" . curl_error ( $ch );
+//        }
+//        curl_close ( $ch );
+//
+/*        $reg = '/<div class="result c-container " id="1"[\s\S]*?><em>'."$word".'<\/em>/';*/
+//        preg_match_all($reg,$content,$match);
+//        echo "<pre>";
+//        print_r($match);
+//        echo "</pre>";
+//        $r = array('0'=>array('id'=>'289176','book_name'=>'下一站天后'));
+        foreach($r as $k=>$v) {
+            $re = $this->getcurl($v['book_name']);
+            if(empty($re)) {
+               $book_name = $v['book_name'];
+               $data['is_top'] = 0;
+//               echo "<pre>";
+//               print_r($m);
+//               echo "</pre>";
+               $res = $m->where("book_name='$book_name'")->save($data);
+//               echo "<hr>";
+//               echo $m->getLastSql();
+//               echo "<hr>";
+               echo $res;
+            }
+        }
+//        $data['is_top'] = 0;
+//        $res = $m->where("book_name='下一站天后'")->save($data);
+//        $r = $m->getLastSql();
+//        dump($r);
+//        dump($m->_sql());
+//        echo "<hr>";
+//        echo $res;
+    }
+
+    public function getcurl($word) {
+//        $word = "下一站天后";
+        $url = "http://www.baidu.com/s?wd=".$word;
+        // 构造包头，模拟浏览器请求
+        $header = array (
+            "Host:www.baidu.com",
+            "Content-Type:application/x-www-form-urlencoded",//post请求
+            "Connection: keep-alive",
+            'Referer:http://www.baidu.com',
+            'User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; BIDUBrowser 2.6)'
+        );
+        $ch = curl_init ();
+        curl_setopt ( $ch, CURLOPT_URL, $url );
+        curl_setopt ( $ch, CURLOPT_HTTPHEADER, $header );
+        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+        $content = curl_exec ( $ch );
+        if ($content == FALSE) {
+            echo "error:" . curl_error ( $ch );
+        }
+        curl_close ( $ch );
+
+        $reg = '/<div class="result c-container " id="1"[\s\S]*?><em>'."$word".'<\/em>/';
+        preg_match_all($reg,$content,$match);
+        echo "<pre>";
+        print_r($match);
+        echo "</pre>";
+        return $match[0][0];
+    }
 }
