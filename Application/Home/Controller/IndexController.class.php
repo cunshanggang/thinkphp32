@@ -219,4 +219,13 @@ class IndexController extends Controller {
         echo "</pre>";
         return $match[0][0];
     }
+
+    public function student() {
+//        $m = M('student',"","mysql://root:@localhost:3306/tp32#utf8");
+        $m = M('student');
+        $r = $m->select();
+        echo $m->getLastSql();
+        echo "<hr>";
+        dump($r);
+    }
 }
