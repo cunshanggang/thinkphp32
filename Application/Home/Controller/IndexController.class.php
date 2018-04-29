@@ -217,8 +217,7 @@ class IndexController extends Controller {
         echo "<pre>";
         print_r($match);
         echo "</pre>";
-        return $match[0][0];
-    }
+     }
 
     public function student() {
 //        $m = M('student',"","mysql://root:@localhost:3306/tp32#utf8");

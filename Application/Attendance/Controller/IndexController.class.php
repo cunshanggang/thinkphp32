@@ -35,9 +35,9 @@ class IndexController extends Controller {
                         $PHPReader = new \PHPExcel_Reader_Excel2007();
                     }
                     $PHPExcel=$PHPReader->load($filename);
-                    $currentSheet = $PHPExcel->getSheet(0);                      // 获取表中的第一个工作表，如果要获取第二个，把0改为1，依次类推
-                    $allColumn = $currentSheet->getHighestColumn();              // 获取总列数
-                    $allRow = $currentSheet->getHighestRow();                    // 获取总行数
+                    $currentSheet = $PHPExcel->getSheet(0);//获取表中的第一个工作表，如果要获取第二个，把0改为1，依次类推
+                    $allColumn = $currentSheet->getHighestColumn();//获取总列数
+                    $allRow = $currentSheet->getHighestRow();//获取总行数
                     for($j=1;$j<=$allRow;$j++){
                         //从A列读取数据
                         for($k='A';$k<=$allColumn;$k++){
