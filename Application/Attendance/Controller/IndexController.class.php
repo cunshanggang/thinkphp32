@@ -69,12 +69,77 @@ class IndexController extends Controller {
     }
 
     public function searchData() {
-        echo "<pre>";
-        print_r($_POST);
-        echo "</pre>";
+//        echo "<pre>";
+//        print_r($_POST);
+//        echo "</pre>";
+        $start    = $_POST['start'];
+        $end      = $_POST['end'];
+        $username = $_POST['username'];
+        $result   = $this->timetostamp($start,$end);
+//        echo "<pre>";
+//        print_r($result);
+//        echo "</pre>";
+        $a = D('Attendance');
+        $data = array();
+        foreach ($result as $k=>$v) {
+            $deadline    = $v + 86340;
+            $map['name'] = $username;
+            $map['time'] = array("between","$v,$deadline");
+            $r = $a->where($map)->select();
+            $w = date("w",$v);
+            switch ($w) {
+                case 1 :
+                    $r['week'] = "星期一";
+                    break;
+                case 2 :
+                    $r['week'] = "星期二";
+                    break;
+                case 3 :
+                    $r['week'] = "星期三";
+                    break;
+                case 4 :
+                    $r['week'] = "星期四";
+                    break;
+                case 5 :
+                    $r['week'] = "星期五";
+                    break;
+                case 6 :
+                    $r['week'] = "星期六";
+                    break;
+                default :
+                    $r['week'] = "星期日";
+                    break;
+            }
+            $r['date']   = date('Y-m-d',$v);
+            $data[$k] = $r;
+        }
+//        echo "<pre>";
+//        print_r($data);
+//        echo "</pre>";
+        $this->ajaxReturn($data);
+
+
 //        exit($_POST['username']);
 //        exit;
 //        return $_REQUEST['username'];
+    }
+
+    //将时间转换成时间戳格式
+    public function timetostamp($s,$e) {
+        //设置默认的时区
+        date_default_timezone_set("PRC");
+        $start = new \DateTime($s);
+        $end   = new \DateTime($e);
+        // 时间间距 这里设置的是一天
+        $interval = \DateInterval::createFromDateString('1 day');
+        $period   = new \DatePeriod($start, $interval, $end);
+
+        $timeStamp = array();
+        foreach ($period as $dt) {
+            array_push($timeStamp,strtotime($dt->format("Y-m-d")));
+        }
+
+        return $timeStamp;
     }
 
     public function assembleData($arr) {

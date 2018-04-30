@@ -43,20 +43,40 @@
 <hr>
 <!--显示结果 start-->
 <div id="container">
-    <table class="table">
-        <caption>考勤情况</caption>
+    <table class="table table-bordered" id="tb">
+        <caption>考勤详细时间</caption>
         <thead>
             <tr>
                 <th>序号</th>
                 <th>姓名</th>
+                <th>日期</th>
+                <th>星期</th>
                 <th>上午</th>
                 <th>下午</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
+            <tr class="danger">
                 <td>1</td>
                 <td>林依蓝</td>
+                <td>2018-04-29</td>
+                <td>星期日</td>
+                <td>2018-04-29 00:16:00</td>
+                <td>2018-04-29 00:16:00</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>林依蓝</td>
+                <td>2018-04-29</td>
+                <td>星期日</td>
+                <td>2018-04-29 00:16:00</td>
+                <td>2018-04-29 00:16:00</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>林依蓝</td>
+                <td>2018-04-29</td>
+                <td>星期日</td>
                 <td>2018-04-29 00:16:00</td>
                 <td>2018-04-29 00:16:00</td>
             </tr>
@@ -138,23 +158,43 @@
                 // }else if($("#status2").is(":checked")){
                 //     status=$("#status2").val();
                 // }
-                var username=$("#username").val().trim();  //得到名称的值
+                var username = $("#username").val().trim();  //得到名称的值
                 var strtime1 = $("#nowdate1").val();
                 var strtime2 = $('#nowdate2').val();
-                var start = new Date(strtime1.replace(/-/g, '/'));
-                var end = new Date(strtime2.replace(/-/g, '/'));
+//                console.log(strtime1);
+//                console.log(strtime2);
+//                var start = new Date(strtime1.replace(/-/g, '/'));//格式化时间为：Fri Apr 27 2018 00:00:00 GMT+0800 (中国标准时间)
+//                var end = new Date(strtime2.replace(/-/g, '/'));//方便下面化为时间戳，使用getTime()函数
+//                console.log(start);
+//                console.log(end);
                 $.ajax({
                     type:'post',
                     data:{
                         "username":username,
-                        "start":start.getTime()/1000,
-                        "end":end.getTime()/1000
+//                        "start":start.getTime()/1000,//转换成时间戳
+//                        "end":end.getTime()/1000//转换成时间戳
+                        "start":strtime1,
+                        "end":strtime2
                     },
                     dataType:'json',
                     url: "{:U('searchData')}",
-                    success: function(data) {
-                        if(data.code=="200"){
+                    success: function(data,status,xhr) {
+//                        console.log(status);//返回的是：success
+//                        console.log(xhr);//返回的状态：readyState:4;status:200;responseText:返回的数据data
+//                        console.log(xhr.status);
+                        if(xhr.status=="200"){
                             //提交成功
+//                            alert(data);
+                            alert(111);
+                            var result = eval('('+data+')');
+                            var html = '<thead><tr><th>序号</th><th>姓名</th><th>日期</th><th>星期</th><th>上午</th><th>下午</th></tr></thead><tbody>';
+                            for(var i in result) {
+                                html += '<tr><td>'+i+'</td><td>'+result[i].name+'</td><td>'+result[i].date+'</td><td>'+result[i].week+'</td><td>'+result[i][0].time+'</td><td>'+result[i][1].time+'</td></tr>';
+                            }
+                            html += '</tbody>';
+                            alert(html);
+                            $('#tb').html(html);
+
                         }else{
                             //提交失败
                         }
