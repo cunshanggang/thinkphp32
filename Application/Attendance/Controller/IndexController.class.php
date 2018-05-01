@@ -56,9 +56,29 @@ class IndexController extends Controller {
         $r = $this->assembleData($data);
         $m = array_values($r['morning']);
         $a = array_values($r['afternoon']);
+//        echo "<pre>";
+//        print_r($m);
+//        echo "<hr>";
+//        print_r($a);
+//        echo "</pre>";
+        //将数据索引改为与数据库字段对应
+        foreach($m as $k1=>$v1) {
+            $m[$k1]['name'] = $v1[0];
+            $m[$k1]['time'] = $v1[1];
+            $m[$k1]['flag'] = $v1[2];
+        }
         echo "<pre>";
         print_r($m);
+        echo "</pre>";
         echo "<hr>";
+
+        //下午
+        foreach($a as $k2=>$v2) {
+            $a[$k2]['name'] = $v2[0];
+            $a[$k2]['time'] = $v2[1];
+            $a[$k2]['flag'] = $v2[2];
+        }
+        echo "<pre>";
         print_r($a);
         echo "</pre>";
     }
@@ -86,37 +106,45 @@ class IndexController extends Controller {
             $map['name'] = $username;
             $map['time'] = array("between","$v,$deadline");
             $r = $a->where($map)->select();
-            $w = date("w",$v);
-            switch ($w) {
-                case 1 :
-                    $r['week'] = "星期一";
-                    break;
-                case 2 :
-                    $r['week'] = "星期二";
-                    break;
-                case 3 :
-                    $r['week'] = "星期三";
-                    break;
-                case 4 :
-                    $r['week'] = "星期四";
-                    break;
-                case 5 :
-                    $r['week'] = "星期五";
-                    break;
-                case 6 :
-                    $r['week'] = "星期六";
-                    break;
-                default :
-                    $r['week'] = "星期日";
-                    break;
+            if(!empty($r)) {
+                $w = date("w",$v);
+                switch ($w) {
+                    case 1 :
+                        $r['week'] = "星期一";
+                        break;
+                    case 2 :
+                        $r['week'] = "星期二";
+                        break;
+                    case 3 :
+                        $r['week'] = "星期三";
+                        break;
+                    case 4 :
+                        $r['week'] = "星期四";
+                        break;
+                    case 5 :
+                        $r['week'] = "星期五";
+                        break;
+                    case 6 :
+                        $r['week'] = "星期六";
+                        break;
+                    default :
+                        $r['week'] = "星期日";
+                        break;
+                }
+                $r['date']   = date('Y-m-d',$v);
+                $data[$k] = $r;
             }
-            $r['date']   = date('Y-m-d',$v);
-            $data[$k] = $r;
+
         }
 //        echo "<pre>";
 //        print_r($data);
 //        echo "</pre>";
-        $this->ajaxReturn($data);
+        if(!empty($data)) {
+            $this->ajaxReturn($data);
+        }else{
+            $this->ajaxReturn(0);
+        }
+
 
 
 //        exit($_POST['username']);
