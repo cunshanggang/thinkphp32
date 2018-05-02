@@ -62,25 +62,30 @@ class IndexController extends Controller {
 //        print_r($a);
 //        echo "</pre>";
         //将数据索引改为与数据库字段对应
+        $am = array();
         foreach($m as $k1=>$v1) {
-            $m[$k1]['name'] = $v1[0];
-            $m[$k1]['time'] = $v1[1];
-            $m[$k1]['flag'] = $v1[2];
+            $am[$k1]['name'] = $v1[0];
+            $am[$k1]['time'] = $v1[1];
+            $am[$k1]['flag'] = $v1[2];
         }
-        echo "<pre>";
-        print_r($m);
-        echo "</pre>";
-        echo "<hr>";
+//        echo "<pre>";
+//        print_r($am);
+//        echo "</pre>";
+//        echo "<hr>";
+        $d = D('Attendance');
+        $d->addAll($am);
 
         //下午
+        $pm = array();
         foreach($a as $k2=>$v2) {
-            $a[$k2]['name'] = $v2[0];
-            $a[$k2]['time'] = $v2[1];
-            $a[$k2]['flag'] = $v2[2];
+            $pm[$k2]['name'] = $v2[0];
+            $pm[$k2]['time'] = $v2[1];
+            $pm[$k2]['flag'] = $v2[2];
         }
-        echo "<pre>";
-        print_r($a);
-        echo "</pre>";
+        $d->addAll($pm);
+//        echo "<pre>";
+//        print_r($pm);
+//        echo "</pre>";
     }
 
     public function search() {
