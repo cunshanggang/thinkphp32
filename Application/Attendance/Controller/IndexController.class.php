@@ -192,6 +192,12 @@ class IndexController extends Controller {
             }
             if(strstr($v[1],"下午")) {
                 $arr[$k][1] = strtotime(str_replace(" 下午 "," ",$v[1]))+60*60*12;
+                //判断是否是12点打卡，如果是，就不用加上12个小时
+                $stamp = strtotime(str_replace(" 下午 "," ",$v[1]));
+                $hour  = date("h",$stamp);
+                if($hour == 12) {
+                    $arr[$k][1] = $stamp;
+                }
                 //区分下午,1:表示下午
                 $arr[$k][2] = 1;
             }
