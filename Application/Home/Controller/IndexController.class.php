@@ -1,8 +1,21 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
+Vendor('log4php.Logger');
 class IndexController extends Controller {
     protected $nba_playoff = array("rockets"=>"火箭","wolves"=>"狼","thunder"=>"雷霆","jazz"=>"爵士","trailblazers"=>"开拓者","pelicans"=>"鹈鹕","warriors"=>"勇士","spurs"=>"马刺","raptors"=>"猛龙","wizards"=>"奇才","cavaliers"=>"骑士","pacers"=>"步行者","76ers"=>"76人","heat"=>"热火","celtics"=>"凯尔特人","bucks"=>"雄鹿");
+
+    public function _initialize() {
+        //是谁告诉你一定要加 \ ？？？？ 只有在完全限定名称的情况下才需要加 \
+        //如果不加， 将会在当前命名空间下寻找这个类
+        \Logger::configure(CONF_PATH . 'log4php.xml');//命名空间，加\表示全局，不加表示当前。
+        $logger = \Logger::getLogger("accesslog");
+        $logger->info('1');
+        //写入日志
+        $logger->info("info日志内容");
+        $logger->error("error日志内容");
+        $logger->debug("debug日志内容");
+    }
     public function index(){
 //        $this->show('<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: "微软雅黑"; color: #333;font-size:24px} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.8em; font-size: 36px } a,a:hover{color:blue;}</style><div style="padding: 24px 48px;"> <h1>:)</h1><p>欢迎使用 <b>ThinkPHP</b>！</p><br/>版本 V{$Think.version}</div><script type="text/javascript" src="http://ad.topthink.com/Public/static/client.js"></script><thinkad id="ad_55e75dfae343f5a1"></thinkad><script type="text/javascript" src="http://tajs.qq.com/stats?sId=9347272" charset="UTF-8"></script>','utf-8');
 
@@ -226,5 +239,9 @@ class IndexController extends Controller {
         echo $m->getLastSql();
         echo "<hr>";
         dump($r);
+    }
+
+    public function logger() {
+
     }
 }
