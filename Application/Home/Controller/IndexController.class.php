@@ -244,4 +244,20 @@ class IndexController extends Controller {
     public function logger() {
 
     }
+
+    //引入一个类
+    public function importClass() {
+        echo "<a href='Application/Common/Foo.php'>aaa</a>";//exit;
+        require_once 'Application/Common/Foo.php';
+//        require_once 'D:\software\xampp\htdocs\thinkphp32\Application\Common\Foo.php';
+        $foo = new \Foo();
+        echo $foo->test();
+        echo "<hr>";
+        //获取当前路径
+        echo __SELF__;///thinkphp32/index.php/Home/Index/importClass
+        //获取物理路径
+        $Absolute_Path=$_SERVER['SCRIPT_FILENAME'];
+        echo "<hr>";
+        echo $Absolute_Path;
+    }
 }
