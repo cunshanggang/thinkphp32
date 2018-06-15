@@ -144,7 +144,7 @@ class IndexController extends Controller {
     }
 
     public function bdbook() {
-        $m = M('bdbook',"",'mysql://root:@localhost/tp32#utf8');
+        $m = M('book_ranking',"",'mysql://root:@localhost/tp32#utf8');
 //        echo "<pre>";
 //        print_r($m);
         $r = $m->select();
@@ -152,7 +152,7 @@ class IndexController extends Controller {
 //        echo $r1;
 //        echo "<pre>";
 //        print_r($r);
-//        echo "</pre>";
+//        echo "</pre>";exit;
 
 //        $word = "下一站天后";
 //        $url = "http://www.baidu.com/s?wd=".$word;
@@ -182,9 +182,12 @@ class IndexController extends Controller {
 //        $r = array('0'=>array('id'=>'289176','book_name'=>'下一站天后'));
         foreach($r as $k=>$v) {
             $re = $this->getcurl($v['book_name']);
-            if(empty($re)) {
+//            echo "<pre>";
+//            print_r($re);
+//            echo "</pre>";
+            if(empty($re[0])) {
                $book_name = $v['book_name'];
-               $data['is_top'] = 0;
+               $data['is_top'] = "否";
 //               echo "<pre>";
 //               print_r($m);
 //               echo "</pre>";
@@ -227,9 +230,10 @@ class IndexController extends Controller {
 
         $reg = '/<div class="result c-container " id="1"[\s\S]*?><em>'."$word".'<\/em>/';
         preg_match_all($reg,$content,$match);
-        echo "<pre>";
-        print_r($match);
-        echo "</pre>";
+        return $match;
+//        echo "<pre>";
+//        print_r($match);
+//        echo "</pre>";
      }
 
     public function student() {
@@ -241,8 +245,15 @@ class IndexController extends Controller {
         dump($r);
     }
 
-    public function logger() {
+    public function testSearch() {
+        $res = $this->getcurl("冰帝校园行");
+        echo "<pre>";
+        print_r($res);
+        echo "</pre>";
 
+        if(empty($res[0])) {
+            echo "为空";
+        }
     }
 
     //引入一个类
@@ -259,5 +270,38 @@ class IndexController extends Controller {
         $Absolute_Path=$_SERVER['SCRIPT_FILENAME'];
         echo "<hr>";
         echo $Absolute_Path;
+    }
+
+    //神马搜索
+    public function smSearch() {
+//        $link = "http://m.sm.cn/s?q=一等家丁&from=smor&safe=1&snum=6";
+//        $link = "http://m.sm.cn/s?q=我的贴身校花&from=smor&safe=1&snum=6";
+//        $link = "http://m.sm.cn/s?q=下一站天后";
+//        $link = "http://m.sm.cn/s?q=冰帝校园行";
+//        $link = "http://m.sm.cn/s?q=凤凰错：替嫁弃妃";
+        $link = "http://m.sm.cn/s?q=超级狂少";
+        $content = file_get_contents($link);
+        echo "<pre>";
+        print_r($content);
+        echo "</pre>";
+        $preg = '/<div class="article ali_row"><h2>(.*?)<em>超级狂少<\/em>/';
+        preg_match_all($preg,$content,$match);
+        echo "<pre>";
+        print_r($match);
+        echo "</pre>";
+    }
+
+    public function smCurl() {
+        $ch = curl_init();
+        $timeout = 0; // set to zero for no timeout
+        $url = "http://m.sm.cn/s?q=超级狂少";
+        curl_setopt ($ch, CURLOPT_URL,$url);
+        curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt ($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.131 Safari/537.36');
+        curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        $html = curl_exec($ch);
+        echo "<pre>";
+        print_r($html);
+        echo "</pre>";
     }
 }

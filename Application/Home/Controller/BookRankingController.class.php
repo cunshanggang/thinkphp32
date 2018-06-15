@@ -11,8 +11,21 @@ class BookRankingController extends Controller {
     public function index() {
         $d = D("BookRanking");
         //查找条件：字数超过50万的
-        $map['words_count'] = array('gt','500000');
-        $r = $d->where($map)->select();
+//        $map['words_count'] = array('gt','500000');
+//        $r = $d->where($map)->select();
+
+        //查找条件：全部的书籍
+//        $r = $d->limit('0,1000')->select();
+//        $r = $d->limit('1000,2000')->select();
+//        $r = $d->limit('2000,3000')->select();
+//        $r = $d->limit('3000,4000')->select();
+//        $r = $d->limit('4000,5000')->select();
+//        $r = $d->limit('5000,6000')->select();
+//        $r = $d->limit('6000,7000')->select();
+        $r = $d->limit('7000,7306')->select();
+//        echo "<pre>";
+//        print_r($r);
+//        echo "</pre>";exit;
         //循环结结果查询
         foreach ($r as $k=>$v) {
             $url = "https://m.baidu.com/s?word={$v['book_name']}";
@@ -20,9 +33,16 @@ class BookRankingController extends Controller {
             //判断书名是否带冒号：
             if(strpos($v['book_name'],"：")) {
                 $str1 = explode("：",$v['book_name']);
-                $reg = '/<div class="c-result result" srcid="nvl_flow" new_srcid="[\s\S]*?" order="1" tpl="nvl_flow" [\s\S]*?<div class="c-result-content">[\s\S]*?'.'<em>'.$str1[0].'<\/em>'.'：'.'<em>'.$str1[1].'<\/em>'.'[\s\S]*?<span class="c-gap-right" data-a-339f6d90 data-a-4498becf>(3G书城)<\/span>/';
+                //05月03日：样式会变：data-a-339f6d90 data-a-4498becf
+//                $reg = '/<div class="c-result result" srcid="nvl_flow" new_srcid="[\s\S]*?" order="1" tpl="nvl_flow" [\s\S]*?<div class="c-result-content">[\s\S]*?'.'<em>'.$str1[0].'<\/em>'.'：'.'<em>'.$str1[1].'<\/em>'.'[\s\S]*?<span class="c-gap-right" data-a-339f6d90 data-a-4498becf>(3G书城)<\/span>/';
+                //06月14日
+                $reg = '/<div class="c-result result" srcid="nvl_flow" new_srcid="[\s\S]*?" order="1" tpl="nvl_flow" [\s\S]*?<div class="c-result-content">[\s\S]*?'.'<em>'.$str1[0].'<\/em>'.'：'.'<em>'.$str1[1].'<\/em>'.'[\s\S]*?<span class="c-color-gray" data-a-33dc5d03>(3G书城)<\/span>/';
             }else{
-                $reg = '/<div class="c-result result" srcid="nvl_flow" new_srcid="[\s\S]*?" order="1" tpl="nvl_flow" [\s\S]*?<div class="c-result-content">[\s\S]*?<em>'.$v['book_name'].'<\/em>[\s\S]*?<span class="c-gap-right" data-a-339f6d90 data-a-4498becf>(3G书城)<\/span>/';
+                //06月14日
+//                $reg = '/<div class="c-result result" srcid="nvl_flow" new_srcid="[\s\S]*?" order="1" tpl="nvl_flow" [\s\S]*?<div class="c-result-content">[\s\S]*?<em>'.$v['book_name'].'<\/em>[\s\S]*?<span class="c-gap-right" data-a-339f6d90 data-a-4498becf>(3G书城)<\/span>/';
+                //06月14日
+                $reg = '/<div class="c-result result" srcid="nvl_flow" new_srcid="[\s\S]*?" order="1" tpl="nvl_flow" [\s\S]*?<div class="c-result-content">[\s\S]*?<em>'.$v['book_name'].'<\/em>[\s\S]*?<span class="c-color-gray" data-a-33dc5d03>(3G书城)<\/span>/';
+
             }
             //正则匹配
             $match = $this->regExp($reg,$str);
@@ -81,5 +101,13 @@ class BookRankingController extends Controller {
         echo $d->where($condition)->save($data);
         echo "<hr>";
         echo $d->getLastSql();
+    }
+
+    public function smTest() {
+        $url = "http://m.sm.cn/s?q=下一站天后";
+        $r = $this->GetcURL($url);
+        echo "<pre>";
+        print_r($r);
+        echo "</pre>";
     }
 }

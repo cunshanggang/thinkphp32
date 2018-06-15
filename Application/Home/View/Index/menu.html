@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>菜单</title>
+</head>
+<body>
+<!-- 上部菜单 -->
+<div class="topMenu clearfix">
+    <a href="javascript:history.go(-1);" class="a01"></a>
+    <a href="" class="a02"></a>
+</div>
+<!-- 下部菜单 -->
+<div class="bottomMenu clearfix">
+    <div class="ToSet_Area">
+        <div class="ToFont_Area">
+            <p class="p1">字体大小：</p>
+            <p>
+                <b onClick="ToFontup();" class="btn_ToFontup"></b>
+                <b onClick="ToFontdown();" class="btn_ToFontdown"></b>
+            </p>
+        </div>
+        <div class="ToBg_Menu">
+            <p class="p1">阅读背景：</p>
+            <p>
+                <span onclick="ToBgcolor(1);" class="ToBg_yellow">羊皮纸</span>
+                <span onclick="ToBgcolor(2);" class="ToBg_green">护眼绿</span>
+                <span onclick="ToBgcolor(3);" class="ToBg_red">清新粉</span>
+                <span onclick="ToBgcolor(0);" class="ToBg_white">高雅白</span>
+                <span onclick="ToBgcolor(4);" class="ToBg_black">夜间黑</span>
+            </p>
+        </div>
+    </div>
+    <div class="menu_none clearfix">
+        <a href="" class="btn_ToMenu"><span>目录</span></a>
+        <a class="btn_ToSet"><span>设置</span></a>
+        <a href="" class="fanye"><span>详情</span></a>
+        <a href="javascript:;" class="btn_ToDown js-download-ggbook"><span>离线</span></a>
+    </div>
+</div>
+<input class="js-download-ggbook-new" onclick="window.location='http://apk.3gsc.com.cn/00/freebook/%E5%85%8D%E8%B4%B9%E8%AF%BB%E4%B9%A6%E6%97%A0%E5%B9%BF%E5%91%8A%E7%89%88-2.0.4-155.apk'" type="hidden" name="">
+
+</body>
+</html>
